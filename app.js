@@ -1,7 +1,19 @@
 const btn1 = document.querySelector(".btn");
+
 const h1 = document.querySelector("h1");
+h1.textContent = "StackExchange API tester";
+
+const output1 = makeNode(document.body, "div", "");
+output1.classList.add("output1");
+
 const output = document.querySelector(".output");
 const inputVal = document.querySelector(".val");
+
+output1.append(h1);
+output1.append(inputVal);
+output1.append(btn1);
+output1.append(output);
+
 const baseURL = "https://api.stackexchange.com/";
 
 window.addEventListener("DOMContentLoaded", (e) => {
@@ -11,6 +23,7 @@ window.addEventListener("DOMContentLoaded", (e) => {
 
 btn1.addEventListener("click", (e) => {
   //console.log("Click ready");
+  // /2.3/search?order=desc&sort=activity&site=stackoverflow
 });
 
 function pageLoad() {
@@ -50,10 +63,12 @@ function outputPage(data) {
   // ansCount.classList.add("ans");
 
   ele.qid = data.question_id;
-  const quesID = makeNode(main, "div", `QID ${data.question_id}`);
+  const quesID = makeNode(main, "div", `QID ${ele.qid}`);
 
   if (data.question_id) {
-    main.addEventListener("click", getById);
+    main.addEventListener("click", (e) => {
+      getById(data.question_id);
+    });
   } else {
     main.style.backgroundColor = "#ddd";
   }
@@ -71,20 +86,17 @@ function makeNode(parent, typeEle, html) {
   return parent.appendChild(element);
 }
 
-function getById(e) {
-  const el = e.target;
-  //console.log(el.qid);
-
-  if (el.qid) {
+function getById(qid) {
+  if (qid) {
     const url1 =
       baseURL +
       "2.3/questions/" +
-      el.qid +
+      qid +
       "?order=desc&sort=activity&site=stackoverflow";
     const url2 =
       baseURL +
       "2.3/questions/" +
-      el.qid +
+      qid +
       "/answers?order=desc&sort=activity&site=stackoverflow";
 
     let itemInfo = {};

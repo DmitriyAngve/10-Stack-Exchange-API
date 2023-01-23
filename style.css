@@ -2,6 +2,10 @@
   box-sizing: border-box;
 }
 
+body {
+  font-family: "Oswald", sans-serif;
+}
+
 .tag {
   padding: 5px;
   margin: 5px;
@@ -39,8 +43,27 @@
   font-size: 0.8em;
 }
 
-.info {
+.info,
+.output {
   width: 80%;
   border: 1px solid #ddd;
   font-size: 1em;
+  margin: auto;
+}
+
+.output1 {
+  width: 80%;
+  border: 1px solid #ddd;
+  font-size: 1em;
+  margin: auto;
+  text-align: center;
+}
+
+input,
+.btn {
+  display: block;
+  width: 100%;
+  font-size: 1.2em;
+  height: 45px;
+  text-align: center;
 }
