@@ -38,3 +38,9 @@
   text-align: center;
   font-size: 0.8em;
 }
+
+.info {
+  width: 80%;
+  border: 1px solid #ddd;
+  font-size: 1em;
+}

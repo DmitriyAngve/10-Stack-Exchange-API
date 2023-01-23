@@ -42,12 +42,21 @@ function outputPage(data) {
   main.classList.add("box");
 
   const ele = makeNode(main, "div", data.title);
+
   ele.classList.add("topTitle");
-  ele.addEventListener("click", getById);
-  ele.qid = data.question_id;
 
   const ansCount = makeNode(main, "div", `Answers ${data.answer_count}`);
   ansCount.classList.add("ans");
+  // ansCount.classList.add("ans");
+
+  ele.qid = data.question_id;
+  const quesID = makeNode(main, "div", `QID ${data.question_id}`);
+
+  if (data.question_id) {
+    main.addEventListener("click", getById);
+  } else {
+    main.style.backgroundColor = "#ddd";
+  }
 
   data.tags.forEach((tag) => {
     const span = makeNode(main, "span", tag);
@@ -66,35 +75,39 @@ function getById(e) {
   const el = e.target;
   //console.log(el.qid);
 
-  const url1 =
-    baseURL +
-    "2.3/questions/" +
-    el.qid +
-    "?order=desc&sort=activity&site=stackoverflow";
-  const url2 =
-    baseURL +
-    "2.3/questions/" +
-    el.qid +
-    "/answers?order=desc&sort=activity&site=stackoverflow";
+  if (el.qid) {
+    const url1 =
+      baseURL +
+      "2.3/questions/" +
+      el.qid +
+      "?order=desc&sort=activity&site=stackoverflow";
+    const url2 =
+      baseURL +
+      "2.3/questions/" +
+      el.qid +
+      "/answers?order=desc&sort=activity&site=stackoverflow";
 
-  let itemInfo = {};
+    let itemInfo = {};
 
-  fetch(url1)
-    .then((rep) => rep.json())
-    .then((data) => {
-      itemInfo = data;
-      return fetch(url2);
-    })
-    .then((res) => res.json())
-    .then((data) => {
-      console.log(itemInfo.items[0]);
-      console.log(data.items);
-      buildPageData(itemInfo.items[0], data.items);
-    })
-    .catch((err) => {
-      // console.log(err);
-    });
-  // /2.3/questions/75199800?order=desc&sort=activity&site=stackoverflow
+    fetch(url1)
+      .then((rep) => rep.json())
+      .then((data) => {
+        itemInfo = data;
+        return fetch(url2);
+      })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(itemInfo.items[0]);
+        console.log(data.items);
+        buildPageData(itemInfo.items[0], data.items);
+      })
+      .catch((err) => {
+        // console.log(err);
+      });
+    // /2.3/questions/75199800?order=desc&sort=activity&site=stackoverflow
+  } else {
+    console.log("Not ID");
+  }
 }
 
 function buildPageData(que, ans) {
@@ -116,6 +129,7 @@ function buildPageData(que, ans) {
     `<div>Answers : ${que.answer_count}</div>`
   );
   const answerDiv = makeNode(output, "div", "");
+  answerDiv.classList.add("info");
 
   link.setAttribute("href", que.link);
   link.setAttribute("target", "_blank"); // open a new page
@@ -123,9 +137,10 @@ function buildPageData(que, ans) {
   ans.forEach((answer, index) => {
     console.log(answer);
 
+    const rating = answer.owner.accept_rate || "-";
     const html = `<hr>Answer № ${index + 1}<br> Answer ID${
       answer.answer_id
-    }<br> Owner : ${answer.owner.display_name} (${answer.owner.accept_rate})`;
+    }<br> Owner : ${answer.owner.display_name} (${rating})`;
     const div1 = makeNode(answerDiv, "div", html);
   });
 }
